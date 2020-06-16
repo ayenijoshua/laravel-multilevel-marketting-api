@@ -23,6 +23,7 @@ class CreateEntryPaymentsTable extends Migration
             $table->string('reference_id')->nullable();
             $table->integer('month')->nullable();
             $table->string('year')->nullable();
+            $table->double('amount');
             $table->timestamps(); //date of pay and approved date
         });
     }

@@ -20,6 +20,7 @@ class CreateSystemSettingsTable extends Migration
             $table->double('dollar_exchange_rate')->nullable();
             $table->double('minimum_withdrawal')->nullable();
             $table->double('welcome_bonus')->nullable();
+            $table->double('pin_price')->nullable();
             $table->timestamps();
         });
     }

@@ -19,6 +19,7 @@ class CreatePinRequestsTable extends Migration
             $table->string('pop_path');
             $table->string('status');
             $table->double('units');
+            $table->double('amount');
             $table->timestamps();
         });
     }

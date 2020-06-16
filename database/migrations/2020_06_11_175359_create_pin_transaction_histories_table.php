@@ -19,6 +19,7 @@ class CreatePinTransactionHistoriesTable extends Migration
             $table->integer('buyer_id');
             $table->string('request_date');
             $table->timestamps(); // date_of_approval
+            $table->double('amount');
         });
     }
 
