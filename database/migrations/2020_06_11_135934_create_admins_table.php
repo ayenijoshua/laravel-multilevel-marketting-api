@@ -24,7 +24,7 @@ class CreateAdminsTable extends Migration
             $table->string('reset_type')->nullable();
             $table->string('auth_qrcode')->nullable();
             $table->string('auth_qrsecret')->nullable();
-            $table->boolean('email_is_verified')->default(false);
+            $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('last_login')->nullable();
             $table->timestamps();
         });

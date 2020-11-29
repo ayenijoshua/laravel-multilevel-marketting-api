@@ -4,28 +4,28 @@ namespace App\Repositories\Interfaces;
 interface AdminRepositoryInterface {
 
     /**
-     * create a user
+     * create a model
      */
-    public function create($data);
+    public function create(array $data);
 
     /**
-     * gel all users
+     * gel all models
      */
     public function all();
 
     /**
-     * get a user
+     * get a model
      */
     public function get($id);
 
     /**
-     * update a user
+     * update a model
      */
-    public function update($id, $data);
+    public function update($model, array $data);
 
     /**
-     * delete a user
+     * delete a model
      */
-    public function delete($id);
+    public function delete($model);
         
 }

@@ -15,13 +15,14 @@ class CreateWithdrawalHistoriesTable extends Migration
     {
         Schema::create('withdrawal_histories', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id');
-            $table->string('user_uuid')->nullable();
+            $table->foreignId('user_id')->constrained('users_table');
+            $table->string('user_uuid')->nullable()->references('uuid')->on('users');
             $table->double('amount');
-            $table->string('request_date');
-            $table->integer('level_id');
+            //$table->string('request_date');
+            $table->foreignId('level_id')->constrained('levels_table');
             $table->integer('month')->nullable();
-            $table->integer('year')->nullable();
+            $table->string('year')->nullable();
+            $table->boolean('is_successful')->default(false);
             $table->timestamps();
         });
     }

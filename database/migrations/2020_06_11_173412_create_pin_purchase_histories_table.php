@@ -15,11 +15,15 @@ class CreatePinPurchaseHistoriesTable extends Migration
     {
         Schema::create('pin_purchase_histories', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id');
+            $table->foreignId('user_id')->constrained('users_table');
             $table->integer('units');
-            $table->string('pop_path');
+            $table->string('pop_path')->nullable();
             $table->integer('month')->nullable();
             $table->integer('year')->nullable();
+            $table->double('amount');
+            $table->boolean('is_successful')->default(false);
+            $table->string('payment_mode')->default('pop');
+            $table->string('transaction_reference')->nullable();
             $table->timestamps();
         });
     }

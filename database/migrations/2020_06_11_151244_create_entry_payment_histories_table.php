@@ -15,14 +15,15 @@ class CreateEntryPaymentHistoriesTable extends Migration
     {
         Schema::create('entry_payment_histories', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id');
-            $table->string('user_uuid')->nullable();
+            $table->foreignId('user_id')->constrained('users_table');
+            $table->string('user_uuid')->references('uuid')->on('users');
             //$table->string('status');
-            $table->string('pop_image');
-            $table->string('payment_mode')->nullable();
-            $table->string('reference_id')->nullable();
+            $table->string('pop_path')->nullable();
+            $table->string('payment_mode')->default('pop');
+            $table->string('transaction_reference')->nullable();
             $table->integer('month')->nullable();
             $table->string('year')->nullable();
+            $table->boolean('is_successful')->default(false);
             $table->double('amount');
             $table->timestamps();
         });

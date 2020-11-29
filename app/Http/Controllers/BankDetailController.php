@@ -4,9 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\BankDetail;
 use Illuminate\Http\Request;
+use App\Repositories\Interfaces\BankDetailRepositoryInterface;
+use App\Traits\HelpsResponse;
 
 class BankDetailController extends Controller
 {
+    use HelpsResponse;
+
+    private $bankDetail;
+    public function __construct(BankDetailRepositoryInterface $bankDetail){
+        $this->bankDetail = $bankDetail;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -35,7 +43,12 @@ class BankDetailController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try{
+            $this->bankDetail->store($request);
+            return $this->successResponse("bank detail created successfully");
+        }catch(\Exeption $e){
+            return $this->exeptionResponse($e);
+        }
     }
 
     /**
@@ -69,7 +82,12 @@ class BankDetailController extends Controller
      */
     public function update(Request $request, BankDetail $bankDetail)
     {
-        //
+        try{
+            $this->bankDetail->updateData($bankDetail,$request);
+            return $this->successMessage("updated");
+        }catch(\Exception $e){
+            return $this->exceptionResponse($e);
+        }
     }
 
     /**
@@ -80,6 +98,11 @@ class BankDetailController extends Controller
      */
     public function destroy(BankDetail $bankDetail)
     {
-        //
+        try{
+            $this->bankDetail->deleteData($bankDetail);
+            return $this->successMessage("deleted");
+        }catch(\Exception $e){
+            return $this->exceptionResponse($e);
+        }
     }
 }

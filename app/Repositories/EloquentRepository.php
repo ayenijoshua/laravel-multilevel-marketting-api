@@ -2,6 +2,11 @@
 namespace App\Repositories;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Artisan;
+use Closure;
+//use App\Jobs\StoreLocalFileJob;
 
 abstract class EloquentRepository {
     protected $model;
@@ -50,23 +55,52 @@ abstract class EloquentRepository {
      
      /**
       * update model
+      * @$model - Eloquent model
       */
-     public function update(Model $model,$data){
+     public function update($model, array $data){
         return $model->update($data);
+     }
+
+     /**
+      * update or create a model
+      * @$columns - table columns
+      * @data - post data
+      */
+     public function updateOrCreate(array $columns, array $data){
+        return $this->model->updateOrCreate($columns,$data);
      }
      
      /**
       * delete model
+      * @$model - Eloquent model
       */
-     public function delete(Model $model){
-         return $model->delete();
+     public function delete($model){
+        return $model->delete();
+     }
+
+     /**
+      * destroy many models
+      * @ids - unique ids of models
+      */
+     public function deleteMany(array $ids){
+        $this->model->destroy($ids);
      }
  
      /**
       * set model instance
+      * @$model - Eloquent model
       */
-     public function setModel($model){
-         return $this->model = $model;
+     public function setModel(Model $model){
+        return $this->model = $model;
+     }
+
+     /**
+      * get value from  a table
+      * @id - Id of model
+      * @coloumn - name of column to get
+      */
+     public function getValue($id,$column){
+        return $this->get($id)->value($column);
      }
  
      /**
@@ -74,7 +108,7 @@ abstract class EloquentRepository {
       * $relations - array of relations
       */
      public function with($relations){
-         return $this->model->with($relations);
+        return $this->model->with($relations);
      }
  
      /**
@@ -121,7 +155,7 @@ abstract class EloquentRepository {
      public function valueExists($column,$value,$id=null){
          $old_value = $this->getModel()->where($column,$value)->whereNotIn('id',[$id])->first();
          if($old_value){
-             return true;
+            return true;
          }
          return false;
       }
@@ -162,7 +196,7 @@ abstract class EloquentRepository {
          $val = Str::random($num);
          $old_val = $this->getModel()->where($column,$val)->first();
          if($old_val){
-             $this->setUniqueValue($num,$column);
+             $this->setUniqueValue($column,$num);
          }
          return $val;
      }
@@ -184,14 +218,56 @@ abstract class EloquentRepository {
       * delete belongs to relations
       */
      public function deleteRelations(Model $model, array $relations){
-         foreach($relations as $relation){
-             if($model->$relation->count()>0){
-                 if(!$model->$relation()->delete()){
-                     return false;
-                 }
-             }
-         }
-         return true;
+        foreach($relations as $relation){
+            if($model->$relation->count()>0){
+                if(!$model->$relation()->delete()){
+                    return false;
+                }
+            }
+        }
+        return true;
      }
+
+     /**
+      * sotore file locally
+      * @$file_name - file name in html form
+      * @$file_path - folder to contain file
+      * @directory - laravel directory name e.g public_path, storage_path etc
+      */
+     public function storeLocalFile($file_name,$file_path,$directory='public',$multiple=null){
+        $file_path = $request->file($file_name)->store($file_path,$directory);
+        if(!$file_path){
+            throw new \Exception("Unable to store file");
+        }
+        return $file_path;
+     }
+
+     /**
+      * delete a local file
+      * @$file_path - file path to be deleted
+      */
+     public function deleteLocalFile($file_path,$directory='public'){
+        if(!Storage::disk($directory)->delete($file_path)){
+            throw new \Exception("Unable to delete file");
+        }
+        $this->callArtisan();
+     }
+
+     /**
+      * call artisan command
+      * @$command - command string/name
+      */
+     public function callArtisan($command='storage:link'){
+        Artisan::call($command);
+     }
+
+     /**
+      * use db transaction
+      */
+     public function transaction(Closure $callback,$retries=1){
+       return DB::transaction($callback,$retries);
+     }
+
+
 
 }

@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class EntryPaymentHistory extends Model
 {
-    //
+    protected $guarded = [];
 }

@@ -17,9 +17,9 @@ class CreateLevelsTable extends Migration
             $table->id();
             $table->string('name');
             $table->text('description');
-            $table->double('downline_bonus')->nullable();
-            $table->double('completion_bonus')->nullable();
-            $table->double('food_stuff_bonus')->nullable();
+            $table->double('downline_bonus')->default(0);
+            $table->double('completion_bonus')->default(0);
+            $table->double('food_stuff_bonus')->default(0); //food_voucher_bonus
             $table->timestamps();
         });
     }

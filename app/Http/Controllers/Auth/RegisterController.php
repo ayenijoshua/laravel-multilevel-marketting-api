@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\RegisterRequest;
 use App\Repositories\UserRepository;
 use App\Traits\HelpsResponse;
+use Illuminate\Auth\Events\Registered;
+use App\Repositories\Interfaces\UserRepositoryInterface;
+
 
 class RegisterController extends Controller
 {
@@ -41,7 +44,7 @@ class RegisterController extends Controller
      */
     private $userRepository;
 
-    function __construct(UserRepository $userRepository){
+    function __construct(UserRepositoryInterface $userRepository){
         $this->middleware('guest');
         $this->userRepository = $userRepository;
     }
@@ -79,16 +82,17 @@ class RegisterController extends Controller
     /**
      * register user
      */
-    public function registerUser(RegisterRequest $request){
+    public function register(RegisterRequest $request){
         try{
-            $user = $this->userRepository->create(array_merge($request->except('password','terms'),
-            ['password'=>Hash::make($request->password),'month'=>date('n'),'year'=>date('Y')]));
+            $uuid = \Illuminate\Support\Str::random(7);
+            $user = $this->userRepository->create(array_merge($request->except('password','terms','password_confirmation'),
+            ['password'=>Hash::make($request->password),'month'=>date('n'),'year'=>date('Y'),'uuid'=>$uuid,'uuids'=>$uuid]));
             if($user){
                 event(new Registered($user));
                 return $this->successResponse('Your account was created successfully. Please check your mail to verify your email address');
             }
         }catch(\Exception $e){
-            return $this->exceptionResponse($e); 
+            return $this->exceptionResponse($e);   
         }
     }
 }

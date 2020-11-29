@@ -8,7 +8,7 @@ interface UserRepositoryInterface {
     /**
      * create a user
      */
-    public function create($data);
+    public function create(array $data);
 
     /**
      * gel all users
@@ -23,11 +23,11 @@ interface UserRepositoryInterface {
     /**
      * update a user
      */
-    public function update($id, $data);
+    public function update($model, array $data);
 
     /**
      * delete a user
      */
-    public function delete($id);
+    public function delete($model);
         
 }

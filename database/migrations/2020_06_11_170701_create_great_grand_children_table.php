@@ -15,9 +15,9 @@ class CreateGreatGrandChildrenTable extends Migration
     {
         Schema::create('great_grand_children', function (Blueprint $table) {
             $table->id();
-            $table->integer('great_grand_cildren_id');
-            $table->integer('parent_id');
-            $table->integer('great_grand_parent_id');
+            $table->string('great_grand_cildren_id');
+            $table->string('parent_id');
+            $table->string('great_grand_parent_id');
             $table->integer('level_id');
             $table->timestamps();
         });

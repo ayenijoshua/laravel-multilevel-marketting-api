@@ -39,7 +39,7 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest')->except('logout');
+        //$this->middleware('guest')->except('logout');
     }
 
     public function authenticated($user){
@@ -50,22 +50,51 @@ class LoginController extends Controller
      * authenticate user
      */
     public function authenticate(LoginRequest $request){
-        $credentials = $request->only('email', 'password');
-        if (!Auth::once($credentials)) {
-            return $this->errorResponse('Invalid login credentials');
+        try{
+            //dd($request->all());
+            $credentials = $request->only('username', 'password');
+            if (!Auth::attempt($credentials)) {
+                return $this->errorResponse('Invalid login credentials');
+            }
+            $user = $request->user();
+            $token = $user->createToken('authToken');//->plainTextToken;
+            if ($request->remember_me){
+                //$token->expires_at = Carbon::now()->addWeeks(1);
+                //$token->save();
+            }
+            $resource = [
+                'access_token' => $token->plainTextToken,
+                //'email_verified_at'=> $user->email_verified_at,
+                //'token_type' => 'Bearer',
+                'user'=>$user
+                // 'expires_at' => Carbon::parse(
+                //     $tokenResult->token->expires_at
+                // )->toDateTimeString()
+            ];
+            return $this->successResponse("Logged in successfully",$resource);
+        }catch(\Exception $e){
+            return $this->exceptionResponse($e);
         }
+
+        /**
+         * $user = $request->user();        
+        $tokenResult = $user->createToken('Personal Access Token');
+        $token = $tokenResult->token;        
+        
         if ($request->remember_me){
-            $token->expires_at = Carbon::now()->addWeeks(1);
-            $token->save();
+            $token->expires_at = Carbon::now()->addWeeks(1); 
         }
-        $resource = [
+                   
+        $token->save();        
+        
+        return response()->json([
             'access_token' => $tokenResult->accessToken,
             'token_type' => 'Bearer',
             'expires_at' => Carbon::parse(
                 $tokenResult->token->expires_at
             )->toDateTimeString()
-        ];
-        return $this->successResponse("Logged in successfully",$resource);
+        ]);
+         */
     }
 
     /**

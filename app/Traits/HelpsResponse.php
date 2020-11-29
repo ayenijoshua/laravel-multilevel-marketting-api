@@ -24,7 +24,7 @@ trait HelpsResponse {
      * get exception error
      * $msg - Exception message to show user
      */
-    public function exceptionResponse($e,$msg='An error occured, please try again',$status_code=500){
+    public function exceptionResponse($e,$msg='Unable to process request, please try again',$status_code=500){
         $this->errorLog($e);
         $ajax = response()->json([
             'message' => $msg,
@@ -49,7 +49,7 @@ trait HelpsResponse {
     /**$v validator
      * get validation error
      */
-    public function validationErrorResponse($v,$msg=null,$status_code=200,$redirect=null){
+    public function validationErrorResponse($v,$msg=null,$status_code=422,$redirect=null){
         $ajax = response()->json([
             'message' => $v ? $v->messages()->all():$msg,
             'success' => false,
@@ -63,7 +63,7 @@ trait HelpsResponse {
      * $msg - message to return
      * $v - validator
      */
-    public function errorResponse($msg=null,$status_code=200,$redirect=null){
+    public function errorResponse($msg=null,$status_code=422,$redirect=null){
         return $this->validationErrorResponse(null,$msg,$status_code,$redirect);
     }
 
@@ -104,19 +104,30 @@ trait HelpsResponse {
     /**
      * generate random numbers
      */
-    public function generateRandomNumbers($num=7){
+    public function random($num=7){
         $val = Str::random($num);
         return $val;
     }
 
+    /**
+     * set pagination session
+     */
     public function setPagination($num=100){
-        \session('pagination',$num);
+        //session()
+        \session(['pagination'=>$num]);
     }
 
+    /**
+     * get pagination session
+     */
     public function getPagination($num=100){
+        //$this->setPagination();
         return session('pagination') ?? $num;
     }
 
+    /**
+     * get pagination increments
+     */
     public function getIncrement($resourse){
         if(!$resourse){
             throw new \Exception('Resource passed is not an object');

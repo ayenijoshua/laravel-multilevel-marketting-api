@@ -13,7 +13,7 @@ class RegisterRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -28,7 +28,7 @@ class RegisterRequest extends FormRequest
             'username'=>'bail|required|string|unique:users',
             'email'=>'bail|required|email',
             'password'=>'bail|required|string|confirmed',
-            'referral id'=>'bail|required|string|exists:users,username',
+            //'referral id'=>'bail|required|string|exists:users,username',
             'terms'=>'bail|required|accepted'
         ];
     }

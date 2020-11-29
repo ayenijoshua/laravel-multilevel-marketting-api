@@ -15,17 +15,18 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('full_name');
+            $table->string('name');
             $table->string('username');
+            $table->boolean('is_approved')->default(false);
             $table->string('phone')->nullable();
             $table->string('gender')->nullable();
-            $table->string('user_img')->nullable();
+            $table->string('image_path')->nullable();
             $table->text('address')->nullable();
             $table->string('bank_name')->nullable();
             $table->string('bank_account_name')->nullable();
             $table->string('bank_account_number')->nullable();
-            $table->integer('level_id');
-            $table->string('country');
+            $table->foreignId('level_id');//->constrained('levels_table');
+            $table->string('country')->nullable();
             $table->boolean('cycled_out')->default(false);
             $table->string('uuid');
             $table->string('uuids');
@@ -37,6 +38,9 @@ class CreateUsersTable extends Migration
             $table->string('auth_qrsecret')->nullable();
             $table->timestamp('last_login')->nullable();
             $table->string('password');
+            $table->bigInteger('pin_units')->default(0);
+            $table->integer('month')->nullable();
+            $table->string('year')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

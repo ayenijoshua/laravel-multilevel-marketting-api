@@ -15,9 +15,9 @@ class CreateChildrenTable extends Migration
     {
         Schema::create('children', function (Blueprint $table) {
             $table->id();
-            $table->integer('child_id');
+            $table->string('child_id');
             $table->integer('level_id');
-            $table->integer('parent_id');
+            $table->string('parent_id');
             $table->timestamps();
         });
     }

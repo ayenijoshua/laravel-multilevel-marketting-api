@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePinTransactionHistoriesTable extends Migration
+class CreatePinRegistrationHistoriesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,15 @@ class CreatePinTransactionHistoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('pin_transaction_histories', function (Blueprint $table) {
+        Schema::create('pin_registration_histories', function (Blueprint $table) {
             $table->id();
-            $table->integer('seller_id');
-            $table->integer('buyer_id');
+            $table->foreignId('seller_id')->constrained('users_table');
+            $table->foreignId('buyer_id')->constrained('users_table');
+            $table->string('user_uuid')->references('uuid')->on('users'); // represents seller uuid
             $table->string('request_date');
             $table->timestamps(); // date_of_approval
             $table->double('amount');
+            $table->boolean('is_successful')->default(false);
         });
     }
 
@@ -30,6 +32,6 @@ class CreatePinTransactionHistoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pin_transaction_histories');
+        Schema::dropIfExists('pin_registration_histories');
     }
 }

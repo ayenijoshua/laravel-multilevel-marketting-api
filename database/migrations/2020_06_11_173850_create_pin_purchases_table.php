@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePinRequestsTable extends Migration
+class CreatePinPurchasesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,17 @@ class CreatePinRequestsTable extends Migration
      */
     public function up()
     {
-        Schema::create('pin_requests', function (Blueprint $table) {
+        Schema::create('pin_purchases', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id');
-            $table->string('pop_path');
+            $table->foreignId('user_id')->constrained('users_table');
+            $table->string('pop_path')->nullable();
             $table->string('status');
             $table->double('units');
             $table->double('amount');
+            $table->string('payment_mode')->default('pop');
+            $table->string('transaction_reference')->nullable();
             $table->timestamps();
+            //$table->for
         });
     }
 
@@ -31,6 +34,6 @@ class CreatePinRequestsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pin_requests');
+        Schema::dropIfExists('pin_purchases');
     }
 }

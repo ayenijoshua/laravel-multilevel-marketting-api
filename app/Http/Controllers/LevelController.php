@@ -4,9 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\Level;
 use Illuminate\Http\Request;
+use App\Repositories\Interfaces\LevelRepositoryInterface;
+use App\Traits\HelpsResponse;
 
 class LevelController extends Controller
 {
+    use HelpsResponse;
+
+    private $levelRepository;
+
+    function __construct(LevelRepositoryInterface $levelRepository){
+        $this->levelRepository = $levelRepository;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +24,7 @@ class LevelController extends Controller
      */
     public function index()
     {
-        //
+        return $this->successResponse('Levels fetched successfully',$this->levelRepository->all());
     }
 
     /**
